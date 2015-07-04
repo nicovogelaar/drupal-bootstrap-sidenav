@@ -1,0 +1,13 @@
+name = Bootstrap sidenav
+description = "This module is an extension of the bootstrap theme that makes it possible to activate a side navigation."
+package = Custom
+version = 7.x-dev
+core = 7.x
+
+stylesheets[all][] = bootstrap-sidenav.css
+scripts[] = bootstrap-sidenav.js
+
+files[] = bootstrap_sidenav.module
+
+settings[bootstrap_sidenav_region] = ''
+settings[bootstrap_sidenav_position] = ''

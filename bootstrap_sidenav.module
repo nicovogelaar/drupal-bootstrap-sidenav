@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function bootstrap_sidenav_preprocess_html(&$variables) {
+  switch (theme_get_setting('bootstrap_sidenav_region')) {
+    case 'sidebar-first':
+      $variables['classes_array'][] = 'sidenav-sidebar-first';
+      break;
+    case 'sidebar-second':
+      $variables['classes_array'][] = 'sidenav-sidebar-second';
+      break;
+  }
+
+  switch (theme_get_setting('bootstrap_sidenav_position')) {
+    case 'left':
+      $variables['classes_array'][] = 'sidenav-left';
+      break;
+    case 'right':
+      $variables['classes_array'][] = 'sidenav-right';
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function bootstrap_sidenav_form_alter(array &$form, array &$form_state = array(), $form_id = NULL) {
+  // Do not add Bootstrap specific settings to non-bootstrap based themes.
+  if (_check_bootstrap_theme($form_state) && 'system_theme_settings' === $form_id) {
+    _bootstrap_sidenav_settings_form($form, $form_state);
+  }
+}
+
+/**
+ * Contains the form for the theme settings.
+ *
+ * @param array $form
+ *   The form array, passed by reference.
+ * @param array $form_state
+ *   The form state array, passed by reference.
+ */
+function _bootstrap_sidenav_settings_form(&$form, $form_state) {
+  $theme = $form_state['build_info']['args'][0];
+
+  // Sidenav.
+  $form['components']['sidenav'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Sidenav'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['components']['sidenav']['bootstrap_sidenav_region'] = array(
+    '#type' => 'select',
+    '#title' => t('Region'),
+    '#description' => t('Select the region to active as a sidenav.'),
+    '#default_value' => theme_get_setting('bootstrap_sidenav_region', $theme),
+    '#options' => array(
+      'sidebar-first' => t('Primary') . ' (sidebar_first)',
+      'sidebar-second' => t('Secondary') . ' (sidebar_second)'
+    ),
+    '#empty_option' => t('None'),
+  );
+  $form['components']['sidenav']['bootstrap_sidenav_position'] = array(
+    '#type' => 'select',
+    '#title' => t('Position'),
+    '#description' => t('Select the position to show the sidenav.'),
+    '#default_value' => theme_get_setting('bootstrap_sidenav_position', $theme),
+    '#options' => array(
+      'left' => t('Left'),
+      'right' => t('Right')
+    ),
+    '#empty_option' => t('None'),
+  );
+
+  // <button type="button" class="sidenav-toggle" data-toggle="sidenav">
+  //   <span class="sr-only">Toggle navigation</span>
+  //   <span class="icon-bar"></span>
+  //   <span class="icon-bar"></span>
+  //   <span class="icon-bar"></span>
+  // </button>
+}
+
+/**
+ * Check if the specified form is a bootstrap based theme
+ * 
+ * @param array $form_state The form state array
+ * 
+ * @return boolean
+ */
+function _check_bootstrap_theme($form_state) {
+  $return = TRUE;
+
+  $theme = !empty($form_state['build_info']['args'][0]) ?
+    $form_state['build_info']['args'][0] : FALSE;
+
+  if ($theme === FALSE) {
+    $return = FALSE;
+  } elseif (is_string($theme) && $theme !== 'bootstrap') {
+    $base_theme = bootstrap_get_theme_info($theme, 'base theme');
+    if (!$base_theme
+      || (!is_array($base_theme) && $base_theme !== 'bootstrap')
+      || (is_array($base_theme) && !in_array('bootstrap', $base_theme))
+    ) {
+      $return = FALSE;
+    }
+  }
+
+  return $return;
+}
