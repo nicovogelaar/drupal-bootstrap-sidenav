@@ -73,13 +73,6 @@ function _bootstrap_sidenav_settings_form(&$form, $form_state) {
     ),
     '#empty_option' => t('None'),
   );
-
-  // <button type="button" class="sidenav-toggle" data-toggle="sidenav">
-  //   <span class="sr-only">Toggle navigation</span>
-  //   <span class="icon-bar"></span>
-  //   <span class="icon-bar"></span>
-  //   <span class="icon-bar"></span>
-  // </button>
 }
 
 /**
