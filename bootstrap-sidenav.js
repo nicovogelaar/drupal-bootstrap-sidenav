@@ -37,17 +37,7 @@
     },
 
     updateSidenav: function () {
-      var sidebar;
-
-      if ($('body.sidenav-sidebar-first').length > 0) {
-        sidebar = $('.region-sidebar-first');
-      } else if ($('body.sidenav-sidebar-second').length > 0) {
-        sidebar = $('.region-sidebar-second');
-      }
-
-      var active = $('body').hasClass('sidenav-active');
-
-      if (active) {
+      if ($('body').hasClass('sidenav-active')) {
         my.closeSidenav();
       } else {
         my.openSidenav();
