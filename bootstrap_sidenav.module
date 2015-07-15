@@ -91,6 +91,7 @@ function _check_bootstrap_theme($form_state) {
   if ($theme === FALSE) {
     $return = FALSE;
   } elseif (is_string($theme) && $theme !== 'bootstrap') {
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('theme', 'bootstrap') . '/theme/common.inc';
     $base_theme = bootstrap_get_theme_info($theme, 'base theme');
     if (!$base_theme
       || (!is_array($base_theme) && $base_theme !== 'bootstrap')
